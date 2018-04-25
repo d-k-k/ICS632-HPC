@@ -1,0 +1,63 @@
+<head>
+</head>
+
+<body>
+
+    This shows that the messages passed to the worker will always be within one parameter.
+    That parameter.data will contain the passed values.
+    Applies to both directions, need the .data
+
+    Probably possible to do a function switching based on some conditions or predefined order.
+
+
+    <script>
+        var coreCount = navigator.hardwareConcurrency;
+        document.body.textContent = "Browser detected " + coreCount + " cores. Starting workers...";
+
+        if (!Worker) {
+            document.body.innerHTML += "<br><br>";
+            document.body.innerHTML += "Unable to make workers, browser doesn't support";
+        } else {
+            var code = `
+            var count = 0;
+            var info = {};
+            info.c = 0;
+            onmessage = function(e) {
+                console.log("Worker got message");
+                console.log(e.data);
+                console.dir(e);
+                count++;
+                info.c++;
+                delayedResponse();
+            }
+
+            function delayedResponse() {
+                let m = count;
+                setTimeout(() => {
+                    console.log("Reacting to message " + m);
+                    postMessage(["Responding to ", m, {"prop": info} ]);
+                }, 1000);
+            }
+            `;
+            var URL = window.webkitURL || window.URL;
+            var bb = new Blob([code], {type : 'text/javascript'});
+    
+            code = URL.createObjectURL(bb);
+
+            var w1 = new Worker(code);
+            w1.onmessage = function(e) {
+                console.log("MAIN received response");
+                console.log(e.data);
+                console.dir(e.data);
+            }
+
+            setTimeout(() => { w1.postMessage("First message");}, 1000);
+            setTimeout(() => { w1.postMessage(["second", "message"]);}, 2000);
+            setTimeout(() => { w1.postMessage({"third":"message"});}, 3000);
+            setTimeout(() => { w1.postMessage(["fourth", {"andLast":"message"}]);}, 4000);
+
+        }
+
+    </script>
+
+</body>

@@ -1,0 +1,14 @@
+
+<script>
+var code = "while(true){}";
+var URL = window.webkitURL || window.URL;
+var bb = new Blob([code], {type : 'text/javascript'});
+
+code = URL.createObjectURL(bb);
+
+
+new Worker(code);
+new Worker(code);  
+new Worker(code);  
+new Worker(code);  
+</script>

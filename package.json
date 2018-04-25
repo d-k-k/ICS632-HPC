@@ -1,0 +1,24 @@
+{
+	"name": "nodeBaseProject",
+	"version": "0.0.0",
+	"private": true,
+	"description": "Example Webserver",
+	"keywords": [
+		"webserver",
+		"example",
+		"learning"
+	],
+	"author": "D K <dylank@hawaii.edu>",
+	"contributors": [
+		{
+			"name": "D K",
+			"email": "dylank@hawaii.edu"
+		}
+	],
+	"dependencies": {
+		"json5": "latest",
+		"mime": "latest",
+		"websocketio": "latest"
+	},
+	"repository": {}
+}

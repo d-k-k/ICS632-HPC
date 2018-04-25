@@ -1,0 +1,35 @@
+<head>
+</head>
+
+<body>
+
+    <script>
+        var coreCount = navigator.hardwareConcurrency;
+        document.body.textContent = "Browser detected " + coreCount + " cores. Starting workers...";
+
+        if (!Worker) {
+            document.body.innerHTML += "<br><br>";
+            document.body.innerHTML += "Unable to make workers, browser doesn't support";
+        } else {
+            var code = "console.log('I am a worker that just started')";
+            var URL = window.webkitURL || window.URL;
+            var bb = new Blob([code], {type : 'text/javascript'});
+    
+            code = URL.createObjectURL(bb);
+
+            console.log("Before making workers");
+            document.body.innerHTML += "<br><br>";
+            document.body.innerHTML += "Before making workers";
+    
+            for (let i = 0; i < coreCount; i++) {
+                setTimeout(() => {
+                    new Worker(code); 
+                    document.body.innerHTML += "<br><br>";
+                    document.body.innerHTML += "Starting worker " + i;
+                }, 3000 * i);
+            }
+        }
+
+    </script>
+
+</body>

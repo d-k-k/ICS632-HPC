@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<link rel="icon" href="favicon.ico">
+		<title>Job Dispatch</title>
+	</head>
+	<!-- ============================================================================================================================================= Body -->
+	<body>
+
+
+
+		<h1 id="titleDiv">Job Sumission Node</h1>
+
+		<input id="juliaWidth" size="5"> width
+		<br>
+		<input id="juliaHeight" size="5"> height
+		<br>
+		<!-- <input id="juliaChunk" size="5"> chunksize
+		<br> -->
+		<button id="juliaSubmitButton">Submit Julia Job</button>
+
+		<div id="juliaWorkspace"></div>
+
+		<h3>Current Status</h3>
+		<div id="statusDiv"></div>
+
+
+		<h3>Log</h3>
+		<div id="logDiv"></div>
+
+
+	</body>
+	
+	<!-- JavaScript references placed at the end of the document so the pages load faster -->
+	<script type="text/javascript" src="src/websocket.io.js"></script>
+	<script type="text/javascript" src="src/jobWsio.js"></script>
+	<script type="text/javascript">
+		initializeWS();
+	</script>
+</html>

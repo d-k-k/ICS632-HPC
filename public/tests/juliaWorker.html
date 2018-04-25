@@ -1,0 +1,54 @@
+<head>
+</head>
+
+<body>
+
+    Canvas below should be julia
+
+    Major issue: RGB must be trimmed (easiest is remove decimal) otherwise values will cause interpretation problems.
+    <br>
+    <canvas id="canvasDiv" width="1000" height="1000" style="border:1px solid black"></canvas>
+
+</body>
+
+
+<script type="text/javascript" src="../src/julia.js"></script>
+<script>
+    // function compute_julia_pixel(x, y, width, height, tint_bias, rgb) 
+    var rgb = [1,2,3]; // need array 3
+
+
+    var ctx = canvasDiv.getContext('2d');
+    ctx.clearRect(0, 0, canvasDiv.width, canvasDiv);
+
+    for (let w = 0; w < canvasDiv.width; w++) {
+        for (let h = 0; h < canvasDiv.height; h++) {
+            compute_julia_pixel(w, h, canvasDiv.width, canvasDiv.height, 1, rgb);
+            rgb[0] = parseInt(rgb[0]);
+            while(rgb[0] > 255) rgb[0] = rgb[0] - 255;
+            rgb[1] = parseInt(rgb[1]);
+            while(rgb[1] > 255) rgb[1] = rgb[1] - 255;
+            rgb[2] = parseInt(rgb[2]);
+            while(rgb[2] > 255) rgb[2] = rgb[2] - 255;
+            ctx.fillStyle = "rgb("+rgb[0]+","+rgb[1]+","+rgb[2]+")"; // 1 is alpha
+            ctx.fillRect( w, h, 1, 1 );
+
+            // console.log("rgba("+rgb[0]+","+rgb[1]+","+rgb[2]+","+1+")"); // 1 is alpha
+
+            // let id = ctx.createImageData(1,1); // only do this once per page
+            // var d  = id.data;                        // only do this once per page
+            // d[0]   = rgb[0];
+            // d[1]   = rgb[1];
+            // d[2]   = rgb[2];
+            // d[3]   = 1;
+            // ctx.putImageData( id, w, h);  
+
+
+
+        }
+        // console.log("rgb("+rgb[0]+","+rgb[1]+","+rgb[2]+")"); // 1 is alpha
+        // while(rgb[0] > 255) rgb[0] = rgb[0] - 255;
+    }
+
+
+</script>

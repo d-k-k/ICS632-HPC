@@ -1,0 +1,65 @@
+<head>
+</head>
+
+<body>
+
+    Results
+
+        Unavailable: window, document, body
+        
+
+    <script>
+        var coreCount = navigator.hardwareConcurrency;
+        document.body.textContent = "Browser detected " + coreCount + " cores. Starting workers...";
+
+        if (!Worker) {
+            document.body.innerHTML += "<br><br>";
+            document.body.innerHTML += "Unable to make workers, browser doesn't support";
+        } else {
+            var code = `
+            console.log('I am a worker that just started');
+            try {
+                console.log('window');
+                console.dir(window);
+            } catch (e) { console.log(e); }
+            try {
+                console.log('document');
+                console.dir(document);
+            } catch (e) { console.log(e); }
+            try {
+                console.log('body');
+                console.dir(body);
+            } catch (e) { console.log(e); }
+            try {
+                console.log('Math');
+                console.dir(Math);
+            } catch (e) { console.log(e); }
+            try {
+                console.log('parseInt');
+                console.dir(parseInt);
+            } catch (e) { console.log(e); }
+            try {
+                console.log('WebSocket');
+                console.dir(WebSocket);
+            } catch (e) { console.log(e); }
+            try {
+                console.log('JSON');
+                console.dir(JSON);
+                var o = {'a':'basic', 'json':'object'};
+                console.dir(o);
+                var so = JSON.stringify(o)
+                console.log(so);
+                console.dir(JSON.parse(so));
+            } catch (e) { console.log(e); }
+            `;
+            var URL = window.webkitURL || window.URL;
+            var bb = new Blob([code], {type : 'text/javascript'});
+    
+            code = URL.createObjectURL(bb);
+
+            new Worker(code);
+        }
+
+    </script>
+
+</body>

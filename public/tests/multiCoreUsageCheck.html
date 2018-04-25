@@ -1,0 +1,34 @@
+<head>
+</head>
+
+<body>
+
+    Only if the workers do something will they use up CPU.
+    Unsure if they just sit around without doing anything if they reach the end of the code.
+
+    <script>
+        var coreCount = navigator.hardwareConcurrency;
+        document.body.textContent = "Browser detected " + coreCount + " cores. Starting workers...";
+
+        if (!Worker) {
+            document.body.innerHTML += "<br><br>";
+            document.body.innerHTML += "Unable to make workers, browser doesn't support";
+        } else {
+            var code = "while(true){}"; // Endlessly loop in worker
+            var URL = window.webkitURL || window.URL;
+            var bb = new Blob([code], {type : 'text/javascript'});
+    
+            code = URL.createObjectURL(bb);
+    
+            for (let i = 0; i < coreCount; i++) {
+                setTimeout(() => {
+                    new Worker(code); 
+                    document.body.innerHTML += "<br><br>";
+                    document.body.innerHTML += "Starting worker " + i;
+                }, 3000 * i);
+            }
+        }
+
+    </script>
+
+</body>

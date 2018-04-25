@@ -1,0 +1,106 @@
+<head>
+</head>
+
+<body>
+
+    <div>Not sure how this will affect things</div>
+
+    <div id="multiDivs">
+        Need this to be
+        <div>
+            a multi
+            <div>
+                div
+            </div>
+            <div>
+                structure
+            </div>
+        </div>
+        <div>for testing copy</div>
+    </div>
+
+    Unable to directly pass any of: window, document, body.
+
+    Possible to pass some of document.
+
+
+</body>
+<script>
+    var coreCount = navigator.hardwareConcurrency;
+    document.body.innerHTML += "Browser detected " + coreCount + " cores. Starting workers...";
+
+    if (!SharedWorker) {
+        document.body.innerHTML += "<br><br>";
+        document.body.innerHTML += "Unable to make workers, browser doesn't support";
+        document.body.innerHTML += "<br><br>";
+    } else {
+        var code = `
+        onmessage = function(e) {
+            console.log("Worker got message");
+            console.log(e.data);
+            console.dir(e);
+        }
+
+        console.log(getComputedStyle);
+        `;
+        var URL = window.webkitURL || window.URL;
+        var bb = new Blob([code], {type : 'text/javascript'});
+
+        code = URL.createObjectURL(bb);
+
+        var w1 = new SharedWorker(code);
+        w1.onmessage = function(e) {
+            console.log("MAIN received response");
+            console.log(e.data);
+            console.dir(e.data);
+        }
+
+        // None of these work
+        // setTimeout(() => { w1.postMessage(window);}, 1000);
+        // setTimeout(() => { w1.postMessage(document);}, 2000);
+        // setTimeout(() => { w1.postMessage(document.body);}, 3000);
+
+        // These work
+        // setTimeout(() => { w1.postMessage(JSON.stringify(window));}, 1000);
+        // setTimeout(() => { w1.postMessage(JSON.stringify(document));}, 2000);
+        // setTimeout(() => { w1.postMessage(JSON.stringify(document.body));}, 3000);
+
+        // Works
+        // var o = {
+        //     some: "string",
+        //     but: {
+        //         there:{
+        //             is: {
+        //                 more: {
+        //                     depth: {
+        //                         than: "one"
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // setTimeout(() => { w1.postMessage(o);}, 1000);
+
+        // Doesn't work
+        // var dc = document.body.cloneNode(true);
+        // setTimeout(() => { w1.postMessage(dc);}, 1000);
+        // setTimeout(() => { w1.postMessage(JSON.stringify(dc));}, 1000);
+
+        // Doesn't work
+        // var compute = window.getComputedStyle;
+        // setTimeout(() => { w1.postMessage(compute);}, 1000);
+
+        // Doesn't work
+        // var md = document.getElementById("multiDivs").cloneNode(true);
+        // setTimeout(() => { w1.postMessage(md);}, 1000);
+        // setTimeout(() => { w1.postMessage(JSON.stringify(md));}, 2000);
+
+        // Kinda works, but its a string
+        var md = document.body.innerHTML;
+        setTimeout(() => { w1.postMessage(md);}, 1000);
+        
+
+    }
+
+</script>

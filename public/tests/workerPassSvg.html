@@ -1,0 +1,81 @@
+<head>
+</head>
+
+<body>
+
+    <div>Not sure how this will affect things</div>
+
+    <div id="multiDivs">
+        Need this to be
+        <div id="md1" class="noClass" propertyThatIsntOfficial="false">
+            a multi
+            <div id="md11">
+                div
+            </div>
+            <div id="md12">
+                structure
+            </div>
+        </div>
+        <div id="md2">for testing copy</div>
+    </div>
+
+    <div id="plot"></div>
+
+    Unable to directly pass any of: window, document, body.
+
+    Possible to pass some of document.
+
+
+</body>
+<script src="plotly.js"></script>
+<script>
+    var coreCount = navigator.hardwareConcurrency;
+    document.body.innerHTML += "Browser detected " + coreCount + " cores. Starting workers...";
+
+
+    var ptest;
+
+    if (!Worker) {
+        document.body.innerHTML += "<br><br>";
+        document.body.innerHTML += "Unable to make workers, browser doesn't support";
+        document.body.innerHTML += "<br><br>";
+    } else {
+        var code = `
+        onmessage = function(e) {
+            console.log("Worker got message");
+            console.log(e.data);
+            console.dir(e);
+        }
+
+        console.log(getComputedStyle);
+        `;
+        var URL = window.webkitURL || window.URL;
+        var bb = new Blob([code], {type : 'text/javascript'});
+
+        code = URL.createObjectURL(bb);
+
+        var w1 = new Worker(code);
+        w1.onmessage = function(e) {
+            console.log("MAIN received response");
+            console.log(e.data);
+            console.dir(e.data);
+        }
+
+        
+
+
+        ptest = document.getElementById('plot');
+        Plotly.plot( ptest, [{
+        x: [1, 2, 3, 4, 5],
+        y: [1, 2, 4, 8, 16] }], {
+        margin: { t: 0 } } );
+
+
+
+        // Kinda works, but its a string
+        setTimeout(() => { w1.postMessage(ptest);}, 1000);
+        setTimeout(() => { w1.postMessage(ptest.innerHTML);}, 2000);
+
+    } // end main
+
+</script>

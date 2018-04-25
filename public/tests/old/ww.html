@@ -1,0 +1,79 @@
+
+
+<head>
+    
+</head>
+
+<body>
+
+    <h2 id="hello">
+        Hello
+    </h2>
+    <h4>
+        How many workers do you want to start?
+    </h4>
+    <input id="workerCount" size="4"/>
+    <button id="startButton">Start</button>
+
+    <!-- <br>
+    <h4 id="cpuLoad">CPU:</h4> -->
+
+    <br>
+    <h4>Output:</h4>
+    <div id="infoDiv">
+        
+    </div>
+
+
+    <script src="worker.js"></script>
+    <script>
+        var allWorkers = [];
+        
+
+        startButton.addEventListener("click", function() {
+            infoDiv.innerHTML = "Starting " + workerCount.value + " workers.\n<br>" + infoDiv.innerHTML;
+            startWorkers();
+        });
+
+
+        document.getElementById("hello").textContent = "Hello, your computer is detected as having "
+            + getCoreCount() + " cores";
+
+
+
+
+
+
+
+
+
+
+
+        function startWorkers() {
+            let workerAmount = parseInt(workerCount.value);
+            if (isNaN(workerAmount)) {
+                return; // return if not a number
+            }
+            for (let i = 0; i < workerAmount; i++) {
+                let code = "while(true){}";
+                let URL = window.webkitURL || window.URL;
+                let bb = new Blob([code], {type : 'text/javascript'});
+                
+                code = URL.createObjectURL(bb);
+                allWorkers.push(new Worker(code)); 
+                infoDiv.innerHTML = "Starting worker...\n<br>" + infoDiv.innerHTML;
+            }
+            infoDiv.innerHTML = "All workers started, there should be a total of " + allWorkers.length + " active workers.\n<br>" + infoDiv.innerHTML;
+        }
+
+        function getCoreCount() {
+            return navigator.hardwareConcurrency;
+        }
+
+        // setInterval(function() {
+        //     chrome.system.cpu.getInfo((info) => { console.dir(info); });
+        // }, 1000);
+
+    </script>
+
+</body>
